@@ -12,9 +12,18 @@ const controls = [
 const BuildControls = (props) => (
     <div className={Classes.BuildControls}>
         {controls.map(ctrl => {
-            return <BuildControl key={ctrl.label} label={ctrl.label} />
+            return <BuildControl
+                key={ctrl.label}
+                label={ctrl.label}
+                addIngredient={() => props.addIng(ctrl.type)}
+                removeIngredient={() => props.remIng(ctrl.type)}
+                disabled={props.disabledInfo[ctrl.type]} />
         })}
-        <div><strong>Total Price:{props.price}</strong></div>
+        <div><strong>Total Price: {Math.abs(props.price.toFixed(2))}$</strong></div>
+        <button
+            disabled={!props.orderable}
+            className={Classes.OrderButton}
+            onClick={props.handleSummaryModal}>Order Now!!!</button>
     </div>
 )
 
