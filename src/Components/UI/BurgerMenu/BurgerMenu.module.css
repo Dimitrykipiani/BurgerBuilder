@@ -1,0 +1,21 @@
+.BurgerMenu{
+    width: 40px;
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
+
+.Line{
+    margin-top: 7px;
+    width: 100%;
+    height: 3px;
+    background-color: white;
+}
+
+@media (min-width: 500px){
+    .BurgerMenu{
+        display: none;
+    }
+}

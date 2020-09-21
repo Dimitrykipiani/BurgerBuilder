@@ -12,3 +12,18 @@
     padding: 0 20px;
     box-sizing: border-box;
 }
+
+.Logo{
+    height: 80%;
+    background-color: #fff;
+    box-sizing: border-box;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+@media (max-width: 499px)
+{
+    .DesktopOnly{
+        display: none;
+    }
+}
