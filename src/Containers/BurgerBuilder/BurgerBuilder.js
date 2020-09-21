@@ -75,11 +75,38 @@ class BurgerBuilder extends React.Component {
                 return sum + el;
             }, 0)
 
-            this.setState({orderable: ingCount > 0})
+        this.setState({ orderable: ingCount > 0 })
     }
 
-    handleSummaryModalState = () => {              
-        this.setState({showSummaryModal:true});        
+    handleSummaryModalState = () => {
+        this.setState({ showSummaryModal: true });
+    }
+
+    handleBackDropRemoval = () => {
+        this.setState({ showSummaryModal: false });
+    }
+
+    handlePurchace = () => {
+        alert('Thank you! Your order is on its way!!!')
+        this.handleBackDropRemoval();
+        this.restartBurger();
+    }
+
+    restartBurger = () => {
+        let reseted = {
+            ...this.state.ingredients
+        };
+
+        let keys = Object.keys(reseted);
+
+        keys.forEach(element => {
+            reseted[element] = 0
+        });
+
+        this.setState({
+            ingredients: reseted,
+            totalPrice: 0
+        })
     }
 
     render() {
@@ -93,8 +120,8 @@ class BurgerBuilder extends React.Component {
 
         return (
             <Auxil>
-                <Modal show={this.state.showSummaryModal}>
-                    <OrderSummary ingredients={this.state.ingredients} totalPrice={this.state.totalPrice} />
+                <Modal show={this.state.showSummaryModal} removeBackdrop={this.handleBackDropRemoval}>
+                    <OrderSummary ingredients={this.state.ingredients} totalPrice={this.state.totalPrice} removeModal={this.handleBackDropRemoval} purchace={this.handlePurchace} />
                 </Modal>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls

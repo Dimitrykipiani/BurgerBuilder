@@ -1,11 +1,15 @@
 import { checkPropTypes } from 'prop-types';
 import React from 'react';
-import Classes from '../Modal/Modal.module.css'
+import Classes from '../Modal/Modal.module.css';
+import Auxil from '../../../Hoc/Auxil';
+import Backdrop from '../BackDrop/BackDrop'
 
 
 const Modal = (props) => {    
-    return (
-        <div
+    return (        
+        <Auxil>
+            <Backdrop show={props.show} removeBackdrop={props.removeBackdrop} />
+            <div
             className={Classes.Modal}
             style={{
                 transform: props.show ? 'translateY(0)' : 'translateY(-100vh)',
@@ -13,6 +17,7 @@ const Modal = (props) => {
             }}>
             {props.children}
         </div>
+        </Auxil>
     )
 }
 
