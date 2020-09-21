@@ -1,7 +1,7 @@
 import { checkPropTypes } from 'prop-types';
 import React, { Component } from 'react';
 import Classes from '../Modal/Modal.module.css';
-import Auxil from '../../../Hoc/Auxil';
+import Auxil from '../../../Hoc/Auxil/Auxil';
 import Backdrop from '../BackDrop/BackDrop'
 
 

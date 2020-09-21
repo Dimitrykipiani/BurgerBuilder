@@ -1,5 +1,5 @@
 import React, { useReducer } from 'react';
-import Auxil from '../../Hoc/Auxil';
+import Auxil from '../../Hoc/Auxil/Auxil';
 import Burger from '../../Components/Burger/Burger';
 import BuildControls from '../../Components/Burger/BuildControls/BuildControls';
 import Modal from '../../Components/UI/Modal/Modal';

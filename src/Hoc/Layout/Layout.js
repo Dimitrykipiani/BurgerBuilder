@@ -1,8 +1,8 @@
 import React, { lazy, Component } from 'react';
-import Auxil from '../../Hoc/Auxil';
+import Auxil from '../../Hoc/Auxil/Auxil';
 import Classes from '../Layout/Layout.module.css';
-import Toolbar from '../Navigation/Toolbar/Toolbar';
-import SideDrawer from '../SideDrawer/SideDrawer';
+import Toolbar from '../../Components/Navigation/Toolbar/Toolbar';
+import SideDrawer from '../../Components/SideDrawer/SideDrawer';
 
 class Layout extends Component {
 
