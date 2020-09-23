@@ -1,18 +1,22 @@
-import React, { useReducer } from 'react';
+import React, { lazy, useReducer } from 'react';
 import Auxil from '../../Hoc/Auxil/Auxil';
 import Burger from '../../Components/Burger/Burger';
 import BuildControls from '../../Components/Burger/BuildControls/BuildControls';
 import Modal from '../../Components/UI/Modal/Modal';
 import OrderSummary from '../../Components/Burger/OrderSummary/OrderSummary';
+import axios from '../../axios-orders';
+import Spinner from '../../Components/UI/Spinner/Spinner';
+import WithErrorHandler from '../../Hoc/WithErrorHandler/WithErrorHandler';
 
 import { object } from 'prop-types';
+import { scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
 
 
 const PRICES = {
-    meat: 1.2,
-    cheese: 0.8,
-    bacon: 0.9,
-    salad: 0.3
+    meat: 0,
+    cheese: 0,
+    bacon: 0,
+    salad: 0
 }
 
 class BurgerBuilder extends React.Component {
@@ -26,12 +30,26 @@ class BurgerBuilder extends React.Component {
         },
         totalPrice: 0,
         orderable: false,
-        showSummaryModal: false
+        showSummaryModal: false,
+        loading: false
+    }
+
+    componentDidMount() {
+        axios.get('burger/getprices')
+            .then(response => {
+                const data = response.data;
+
+                PRICES.meat = data.meatPrice;
+                PRICES.cheese = data.cheesePrice;
+                PRICES.bacon = data.baconPrice;
+                PRICES.salad = data.saladPrice;
+            });
     }
 
     addIngredientHandler = (type) => {
         const oldCount = this.state.ingredients[type];
         const updatedCount = oldCount + 1;
+
         const updatedIngredients = {
             ...this.state.ingredients
         }
@@ -87,9 +105,23 @@ class BurgerBuilder extends React.Component {
     }
 
     handlePurchace = () => {
-        alert('Thank you! Your order is on its way!!!')
-        this.handleBackDropRemoval();
-        this.restartBurger();
+        this.setState({ loading: true });
+
+        if (this.state.orderable) {
+            axios.post('burger/create', {
+                TotalPrice: this.state.totalPrice,
+                meatCount: this.state.ingredients.meat,
+                baconCount: this.state.ingredients.bacon,
+                cheeseCount: this.state.ingredients.cheese,
+                saladCount: this.state.ingredients.salad
+            }).then(response => {
+                this.setState({ loading: false });
+                this.restartBurger();
+            }).catch(error => {
+                this.restartBurger();
+                this.setState({ loading: false });
+            })
+        }
     }
 
     restartBurger = () => {
@@ -107,7 +139,12 @@ class BurgerBuilder extends React.Component {
             ingredients: reseted,
             totalPrice: 0
         })
+
+        alert('Thanks! Your burger is on its way!!!')
+        this.handleBackDropRemoval();
     }
+
+
 
     render() {
         const disabledInfo = {
@@ -118,10 +155,20 @@ class BurgerBuilder extends React.Component {
             disabledInfo[key] = disabledInfo[key] <= 0
         }
 
+        let orderSum = <OrderSummary
+            ingredients={this.state.ingredients}
+            totalPrice={this.state.totalPrice}
+            removeModal={this.handleBackDropRemoval}
+            purchace={this.handlePurchace} />;
+
+        if (this.state.loading) {
+            orderSum = <Spinner />
+        }
+
         return (
             <Auxil>
                 <Modal show={this.state.showSummaryModal} removeBackdrop={this.handleBackDropRemoval}>
-                    <OrderSummary ingredients={this.state.ingredients} totalPrice={this.state.totalPrice} removeModal={this.handleBackDropRemoval} purchace={this.handlePurchace} />
+                    {orderSum}
                 </Modal>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls
@@ -136,4 +183,4 @@ class BurgerBuilder extends React.Component {
     }
 }
 
-export default BurgerBuilder;
+export default WithErrorHandler(BurgerBuilder, axios);
