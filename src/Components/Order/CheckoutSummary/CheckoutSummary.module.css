@@ -1,0 +1,13 @@
+.CheckoutSummary{
+    text-align: center;
+    width: 80%;
+    margin: auto;
+    text-transform: uppercase;
+}
+
+@media (max-width: 600px){
+    .CheckoutSummary{
+        width: 500px;
+        height: 1000px;
+    }
+}

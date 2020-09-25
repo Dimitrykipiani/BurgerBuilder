@@ -8,7 +8,7 @@ import axios from '../../axios-orders';
 import Spinner from '../../Components/UI/Spinner/Spinner';
 import WithErrorHandler from '../../Hoc/WithErrorHandler/WithErrorHandler';
 
-import { object } from 'prop-types';
+import { object, string } from 'prop-types';
 import { scryRenderedDOMComponentsWithClass } from 'react-dom/test-utils';
 
 
@@ -34,7 +34,7 @@ class BurgerBuilder extends React.Component {
         loading: false
     }
 
-    componentDidMount() {
+    componentDidMount() {        
         axios.get('burger/getprices')
             .then(response => {
                 const data = response.data;
@@ -46,7 +46,7 @@ class BurgerBuilder extends React.Component {
             });
     }
 
-    addIngredientHandler = (type) => {
+    addIngredientHandler = (type) => {        
         const oldCount = this.state.ingredients[type];
         const updatedCount = oldCount + 1;
 
@@ -64,6 +64,7 @@ class BurgerBuilder extends React.Component {
         });
 
         this.updateOrderableStatus(updatedIngredients);
+        console.log(updatedPrice);
     }
 
     removeIngredientHandler = (type) => {
@@ -104,24 +105,21 @@ class BurgerBuilder extends React.Component {
         this.setState({ showSummaryModal: false });
     }
 
-    handlePurchace = () => {
-        this.setState({ loading: true });
-
-        if (this.state.orderable) {
-            axios.post('burger/create', {
-                TotalPrice: this.state.totalPrice,
-                meatCount: this.state.ingredients.meat,
-                baconCount: this.state.ingredients.bacon,
-                cheeseCount: this.state.ingredients.cheese,
-                saladCount: this.state.ingredients.salad
-            }).then(response => {
-                this.setState({ loading: false });
-                this.restartBurger();
-            }).catch(error => {
-                this.restartBurger();
-                this.setState({ loading: false });
-            })
+    handlePurchace = () => {                
+        let params = [];
+        for(let i in this.state.ingredients)
+        {
+            params.push(encodeURIComponent(i)+'='+ encodeURIComponent(this.state.ingredients[i]));
         }
+
+        params.push('price='+ this.state.totalPrice)
+
+        const queryString = params.join('&');
+
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?'+ queryString
+        });
     }
 
     restartBurger = () => {
@@ -143,8 +141,6 @@ class BurgerBuilder extends React.Component {
         alert('Thanks! Your burger is on its way!!!')
         this.handleBackDropRemoval();
     }
-
-
 
     render() {
         const disabledInfo = {

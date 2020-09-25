@@ -1,0 +1,19 @@
+.Order{
+    width: 50%;
+    border:  1px solid #eee;
+    box-shadow: 0 2px 3px #c0c0c0;
+    padding: 10px;
+    margin: 10px auto;
+    box-sizing: border-box;
+}
+
+.Order div{
+    text-align: center;
+}
+
+.Unit{
+    padding: 5px 10px;
+    margin-left: 15px;
+    border: 1px solid #c1c1c1;
+    box-sizing: border-box;
+}
